@@ -8,3 +8,4 @@ scikit-learn
 nltk
 plotly
 joblib
+gunicorn
