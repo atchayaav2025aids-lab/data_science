@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}My Achievements - {{ app_name }}{% endblock %}
+{% block header_title %}Alumni Achievements Showcase{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-amber-800 via-amber-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-amber-500/30 text-amber-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-amber-500/30">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Professional Milestones</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Alumni Honor & Achievement Showcase</h2>
+            <p class="text-xs sm:text-sm text-amber-100 font-medium max-w-xl">Share career honors, research publications, awards, and milestones to inspire the campus community.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-award"></i>
+        </div>
+    </div>
+
+    <!-- Add Achievement Form Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b pb-4 border-slate-100 flex items-center justify-between">
+            <h3 class="text-lg font-extrabold text-slate-900 flex items-center space-x-2">
+                <i class="fa-solid fa-trophy text-amber-500"></i>
+                <span>Add New Career Achievement or Honor</span>
+            </h3>
+        </div>
+
+        <form action="{{ url_for('alumni.achievements') }}" method="POST" class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Achievement Title</label>
+                    <input type="text" name="title" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all" placeholder="e.g. Best Innovator Award 2024 / Published IEEE Research Paper">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Year Received</label>
+                    <input type="number" name="year" value="2024" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Awarding Organization / Conference</label>
+                <input type="text" name="organization" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all" placeholder="e.g. Google Cloud / Indian National Academy of Engineering">
+            </div>
+
+            <div>
+                <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Description & Impact</label>
+                <textarea name="description" rows="3" required class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all" placeholder="Brief summary of the recognition, key details, or accomplishment scope..."></textarea>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end">
+                <button type="submit" class="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Log Achievement</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Achievements List Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b pb-4 border-slate-100 flex items-center justify-between">
+            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Logged Achievements Timeline</h3>
+            <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-extrabold rounded-full border border-amber-200">{{ achievements|length }} Total</span>
+        </div>
+
+        <div class="space-y-4">
+            {% for ach in achievements %}
+            <div class="p-5 rounded-2xl border border-slate-200/80 bg-slate-50/50 space-y-2 hover-lift transition-all">
+                <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-black rounded-full border border-amber-300"><i class="fa-solid fa-calendar mr-1"></i> {{ ach.year }}</span>
+                    <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-building mr-1"></i> {{ ach.organization }}</span>
+                </div>
+                <h4 class="text-base font-extrabold text-slate-900 leading-snug">{{ ach.title }}</h4>
+                <p class="text-xs text-slate-600 leading-relaxed font-medium bg-white p-3.5 rounded-xl border border-slate-100">{{ ach.description }}</p>
+            </div>
+            {% else %}
+            <div class="py-12 text-center text-slate-400 space-y-3 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                <i class="fa-solid fa-award text-4xl text-slate-300"></i>
+                <div class="space-y-1">
+                    <p class="text-sm font-bold text-slate-700">No Achievements Recorded Yet</p>
+                    <p class="text-xs text-slate-500 max-w-sm mx-auto">Use the form above to record your career milestones and awards.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

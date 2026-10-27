@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Internships - {{ app_name }}{% endblock %}
+{% block header_title %}Internship Opportunities (AI Recommendations){% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-purple-500/30 text-purple-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-purple-500/30">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                <span>Smart Relevance Matcher</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">AI Ranked Internship Opportunities</h2>
+            <p class="text-xs sm:text-sm text-purple-200 font-medium">Internships sorted dynamically based on similarity with your profile skills and major.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-laptop-code"></i>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm">
+        <form action="{{ url_for('student.internships') }}" method="GET" class="flex gap-3">
+            <div class="relative flex-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Search internships by skill, title, or company..." class="w-full pl-11 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all">
+            </div>
+            <button type="submit" class="px-6 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-extrabold rounded-xl text-sm shadow-md transition-all">Search</button>
+        </form>
+    </div>
+
+    <!-- Internships Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% for rec in recommendations %}
+        {% set item = rec.item %}
+        <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm hover-lift space-y-4 flex flex-col justify-between transition-all">
+            <div class="space-y-3">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 text-purple-800 px-2.5 py-0.5 rounded-full border border-purple-200">{{ item.duration or 'Flexible' }} Internship</span>
+                        <h3 class="text-lg font-extrabold text-slate-900 mt-2 leading-tight">{{ item.title }}</h3>
+                        <p class="text-xs font-bold text-purple-700 mt-0.5">{{ item.company }} • <span class="text-slate-500 font-normal"><i class="fa-solid fa-location-dot mr-1"></i>{{ item.location or 'Flexible' }}</span></p>
+                    </div>
+
+                    <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm shrink-0">
+                        {{ rec.match_score }}% Match
+                    </span>
+                </div>
+
+                <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed font-medium">{{ item.description }}</p>
+
+                <!-- Skills -->
+                {% if item.skills_required %}
+                <div class="space-y-1">
+                    <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Required Skills:</span>
+                    <div class="flex flex-wrap gap-1.5">
+                        {% for s in item.skills_required.split(',') %}
+                        <span class="bg-slate-100 text-slate-700 text-[11px] px-2.5 py-0.5 rounded-lg border border-slate-200/80 font-medium">{{ s.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Explainability Reasons -->
+                {% if rec.reasons %}
+                <div class="p-3.5 bg-purple-50/70 border border-purple-200/70 rounded-2xl space-y-1">
+                    <span class="text-[11px] font-bold text-purple-900 flex items-center space-x-1">
+                        <i class="fa-solid fa-circle-info text-purple-600"></i>
+                        <span>Match Rationale:</span>
+                    </span>
+                    <ul class="text-[11px] text-purple-900/80 space-y-0.5 list-disc list-inside font-medium">
+                        {% for reason in rec.reasons %}
+                        <li>{{ reason }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-[11px] text-rose-600 font-bold"><i class="fa-regular fa-clock mr-1"></i> Apply by: {{ item.deadline or 'Open' }}</span>
+                <a href="{{ item.application_link or '#' }}" target="_blank" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-extrabold rounded-xl text-xs shadow-md transition-all flex items-center space-x-1.5">
+                    <span>Apply Now</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-span-full py-16 text-center space-y-4 bg-white rounded-3xl border border-slate-200/80 p-8">
+            <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center mx-auto text-3xl font-bold shadow-inner">
+                <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <div class="space-y-1">
+                <h4 class="text-base font-bold text-slate-800">No Internships Found</h4>
+                <p class="text-xs text-slate-500 max-w-md mx-auto">Verified alumni and college coordinators post internship opportunities regularly. Try broadening your search or check back soon.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - {{ app_name }}{% endblock %}
+{% block header_title %}College Alumni Events{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-purple-950 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-purple-500/30 text-purple-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-purple-500/30">
+                <i class="fa-solid fa-calendar-star"></i>
+                <span>Campus Gatherings & Reunions</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">College & Alumni Events Hub</h2>
+            <p class="text-xs sm:text-sm text-purple-200 font-medium max-w-xl">Register for alumni guest lectures, annual reunions, career symposiums, and networking workshops.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-calendar-days"></i>
+        </div>
+    </div>
+
+    <!-- Events List Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="border-b pb-4 border-slate-100 flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Upcoming Scheduled Events</h3>
+                <p class="text-xs text-slate-500 font-medium">Click register to confirm your attendance slot.</p>
+            </div>
+            <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-full border border-purple-200"><i class="fa-solid fa-calendar-days mr-1"></i> {{ events|length }} Active Events</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for ev in events %}
+            <div class="p-6 rounded-3xl border border-slate-200/80 bg-slate-50/50 space-y-4 flex flex-col justify-between hover-lift transition-all">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 bg-purple-100 text-purple-800 text-[11px] font-extrabold rounded-full border border-purple-200 uppercase tracking-wider">{{ ev.event_type }}</span>
+                        <span class="text-xs text-slate-600 font-bold bg-white px-3 py-1 rounded-full border border-slate-200"><i class="fa-regular fa-calendar text-purple-600 mr-1.5"></i> {{ ev.event_date }}</span>
+                    </div>
+
+                    <h4 class="text-lg font-extrabold text-slate-900 leading-snug">{{ ev.title }}</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed font-medium">{{ ev.description }}</p>
+
+                    <div class="text-xs text-slate-700 space-y-1.5 bg-white p-4 rounded-2xl border border-slate-200/80 font-medium">
+                        <p class="flex items-center"><i class="fa-regular fa-clock w-5 text-purple-600"></i> Time: <strong class="text-slate-900 ml-1">{{ ev.event_time }}</strong></p>
+                        <p class="flex items-center"><i class="fa-solid fa-location-dot w-5 text-rose-600"></i> Venue: <strong class="text-slate-900 ml-1">{{ ev.venue }}</strong></p>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-t border-slate-200/80 flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-users text-blue-500 mr-1"></i> {{ ev.registrations|length }} Registered</span>
+                    
+                    {% if ev.id in user_registrations %}
+                    <span class="px-4 py-2 bg-emerald-100 text-emerald-800 font-extrabold text-xs rounded-xl border border-emerald-300 shadow-sm flex items-center space-x-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                        <span>Registered</span>
+                    </span>
+                    {% else %}
+                    <form action="{{ url_for('events.register_event', event_id=ev.id) }}" method="POST">
+                        <button type="submit" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center space-x-1.5">
+                            <span>Register Now</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="col-span-full py-16 text-center space-y-4 bg-slate-50/50 rounded-3xl border border-dashed border-slate-200 p-8">
+                <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center mx-auto text-3xl font-bold shadow-inner">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="text-base font-bold text-slate-800">No Events Scheduled Right Now</h4>
+                    <p class="text-xs text-slate-500 max-w-md mx-auto">Upcoming alumni reunions, guest lectures, and campus webinars will be published here by administrators.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

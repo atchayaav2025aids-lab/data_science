@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Plotly Analytics Dashboard - {{ app_name }}{% endblock %}
+{% block header_title %}Executive Plotly Data Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-purple-500/30 text-purple-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-purple-500/30">
+                <i class="fa-solid fa-chart-pie text-amber-400"></i>
+                <span>Pandas + Plotly Interactive Analytics Engine</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Executive Platform Analytics</h2>
+            <p class="text-xs sm:text-sm text-purple-200 font-medium">10 Interactive Plotly visualizations for institutional decision support</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-chart-line"></i>
+        </div>
+    </div>
+
+    <!-- 10 Plotly Charts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Chart 1: Alumni Distribution by Department -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-chart-pie text-blue-500"></i>
+                <span>1. Alumni Distribution by Department</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.dept_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 2: Alumni by Graduation Year -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-chart-column text-indigo-500"></i>
+                <span>2. Alumni by Graduation Year</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.grad_year_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 3: Alumni Industry Sectors -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-building text-emerald-500"></i>
+                <span>3. Alumni Top Industry Sectors</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.industry_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 4: Alumni Location Distribution -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-map-location-dot text-rose-500"></i>
+                <span>4. Alumni Geographic Location</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.location_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 5: User Registration Trends -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-chart-line text-purple-500"></i>
+                <span>5. Monthly User Registrations</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.registration_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 6: Mentorship Status -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-handshake text-amber-500"></i>
+                <span>6. Mentorship Request Status Breakdown</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.mentorship_status_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 7: Jobs vs Internships -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-briefcase text-blue-600"></i>
+                <span>7. Jobs vs Internships Posted</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.job_internship_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 8: Event Registrations -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-calendar-check text-purple-600"></i>
+                <span>8. Event Registration & Participation</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.event_participation_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 9: Top Skills -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-code text-teal-600"></i>
+                <span>9. Top In-Demand Alumni Skills</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.top_skills_chart | safe }}
+            </div>
+        </div>
+
+        <!-- Chart 10: Engagement Index -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2 border-b pb-2 border-slate-100">
+                <i class="fa-solid fa-arrow-trend-up text-emerald-600"></i>
+                <span>10. Platform Engagement Growth Index</span>
+            </h3>
+            <div class="plotly-chart-container border border-slate-100 rounded-2xl overflow-hidden p-1">
+                {{ charts.engagement_index_chart | safe }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

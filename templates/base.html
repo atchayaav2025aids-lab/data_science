@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ app_name }}{% endblock %} — Centralized Alumni Platform</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 6 Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Plotly.js for Analytics Charts -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  {% block head %}{% endblock %}
+</head>
+<body class="bg-[#F7F9FC] text-slate-900 font-sans min-h-full flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  {% if current_user.is_authenticated %}
+  <!-- ==========================================
+       AUTHENTICATED DASHBOARD LAYOUT
+       ========================================== -->
+  <div class="min-h-screen flex flex-col md:flex-row">
+    <!-- Sidebar Mobile Backdrop -->
+    <div id="sidebar-overlay" onclick="toggleMobileSidebar()" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 md:hidden"></div>
+
+    <!-- Reusable Light White Sidebar -->
+    <aside id="mobile-sidebar" class="fixed md:static top-0 left-0 z-50 h-full w-64 bg-white border-r border-[#E5EAF1] flex flex-col transition-transform duration-300 -translate-x-full md:translate-x-0 shrink-0">
+      <!-- Brand Header -->
+      <div class="h-20 px-6 border-b border-slate-100 flex items-center justify-between">
+        <a href="{{ url_for('auth.index') }}" class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl {% if current_user.role == 'student' %}bg-blue-600{% elif current_user.role == 'alumni' %}bg-teal-600{% else %}bg-purple-600{% endif %} text-white flex items-center justify-center font-extrabold text-lg shadow-md">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div>
+            <span class="text-base font-extrabold text-slate-900 block leading-tight">AlumniConnect</span>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider block {% if current_user.role == 'student' %}text-blue-600{% elif current_user.role == 'alumni' %}text-teal-600{% else %}text-purple-600{% endif %}">
+              {{ current_user.role.upper() }} PORTAL
+            </span>
+          </div>
+        </a>
+        <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1.5">
+        {% if current_user.role == 'student' %}
+          <a href="{{ url_for('student.dashboard') }}" class="nav-link {% if request.endpoint == 'student.dashboard' %}active-student{% endif %}">
+            <i class="fa-solid fa-chart-pie w-5 text-blue-600"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="{{ url_for('student.recommended_mentors') }}" class="nav-link {% if request.endpoint == 'student.recommended_mentors' %}active-student{% endif %}">
+            <i class="fa-solid fa-wand-magic-sparkles w-5 text-amber-500"></i>
+            <span>Recommended Mentors</span>
+          </a>
+          <a href="{{ url_for('student.alumni_directory') }}" class="nav-link {% if request.endpoint == 'student.alumni_directory' %}active-student{% endif %}">
+            <i class="fa-solid fa-address-book w-5 text-blue-600"></i>
+            <span>Alumni Directory</span>
+          </a>
+          <a href="{{ url_for('student.mentorship_requests') }}" class="nav-link {% if request.endpoint == 'student.mentorship_requests' %}active-student{% endif %}">
+            <i class="fa-solid fa-comments w-5 text-blue-600"></i>
+            <span>Mentorship Requests</span>
+          </a>
+          <a href="{{ url_for('student.jobs') }}" class="nav-link {% if request.endpoint == 'student.jobs' %}active-student{% endif %}">
+            <i class="fa-solid fa-briefcase w-5 text-blue-600"></i>
+            <span>Jobs Board</span>
+          </a>
+          <a href="{{ url_for('student.internships') }}" class="nav-link {% if request.endpoint == 'student.internships' %}active-student{% endif %}">
+            <i class="fa-solid fa-laptop-code w-5 text-teal-600"></i>
+            <span>Internships</span>
+          </a>
+          <a href="{{ url_for('student.events') }}" class="nav-link {% if request.endpoint == 'student.events' %}active-student{% endif %}">
+            <i class="fa-solid fa-calendar-days w-5 text-rose-500"></i>
+            <span>Events & Workshops</span>
+          </a>
+          <a href="{{ url_for('student.announcements') }}" class="nav-link {% if request.endpoint == 'student.announcements' %}active-student{% endif %}">
+            <i class="fa-solid fa-bullhorn w-5 text-purple-600"></i>
+            <span>Announcements</span>
+          </a>
+          <a href="{{ url_for('student.notifications') }}" class="nav-link {% if request.endpoint == 'student.notifications' %}active-student{% endif %}">
+            <i class="fa-solid fa-bell w-5 text-amber-500"></i>
+            <span>Notifications</span>
+          </a>
+          <a href="{{ url_for('student.profile') }}" class="nav-link {% if request.endpoint == 'student.profile' %}active-student{% endif %}">
+            <i class="fa-solid fa-user w-5 text-blue-600"></i>
+            <span>My Profile</span>
+          </a>
+
+        {% elif current_user.role == 'alumni' %}
+          <a href="{{ url_for('alumni.dashboard') }}" class="nav-link {% if request.endpoint == 'alumni.dashboard' %}active-alumni{% endif %}">
+            <i class="fa-solid fa-chart-pie w-5 text-teal-600"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="{{ url_for('alumni.mentorship_requests') }}" class="nav-link {% if request.endpoint == 'alumni.mentorship_requests' %}active-alumni{% endif %}">
+            <i class="fa-solid fa-comments w-5 text-teal-600"></i>
+            <span>Mentorship Requests</span>
+          </a>
+          <a href="{{ url_for('alumni.post_job') }}" class="nav-link {% if request.endpoint == 'alumni.post_job' %}active-alumni{% endif %}">
+            <i class="fa-solid fa-plus-circle w-5 text-blue-600"></i>
+            <span>Post Job</span>
+          </a>
+          <a href="{{ url_for('alumni.post_internship') }}" class="nav-link {% if request.endpoint == 'alumni.post_internship' %}active-alumni{% endif %}">
+            <i class="fa-solid fa-graduation-cap w-5 text-teal-600"></i>
+            <span>Post Internship</span>
+          </a>
+          <a href="{{ url_for('alumni.my_posts') }}" class="nav-link {% if request.endpoint == 'alumni.my_posts' %}active-alumni{% endif %}">
+            <i class="fa-solid fa-list-check w-5 text-teal-600"></i>
+            <span>My Postings</span>
+          </a>
+          <a href="{{ url_for('alumni.events') }}" class="nav-link {% if request.endpoint == 'alumni.events' %}active-alumni{% endif %}">
+            <i class="fa-solid fa-calendar-days w-5 text-rose-500"></i>
+            <span>College Events</span>
+          </a>
+          <a href="{{ url_for('alumni.achievements') }}" class="nav-link {% if request.endpoint == 'alumni.achievements' %}active-alumni{% endif %}">
+            <i class="fa-solid fa-trophy w-5 text-amber-500"></i>
+            <span>Achievements</span>
+          </a>
+          <a href="{{ url_for('alumni.profile') }}" class="nav-link {% if request.endpoint == 'alumni.profile' %}active-alumni{% endif %}">
+            <i class="fa-solid fa-user-tie w-5 text-teal-600"></i>
+            <span>Professional Profile</span>
+          </a>
+
+        {% elif current_user.role == 'admin' %}
+          <a href="{{ url_for('admin.dashboard') }}" class="nav-link {% if request.endpoint == 'admin.dashboard' %}active-admin{% endif %}">
+            <i class="fa-solid fa-chart-pie w-5 text-purple-600"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="{{ url_for('admin.students') }}" class="nav-link {% if request.endpoint == 'admin.students' %}active-admin{% endif %}">
+            <i class="fa-solid fa-user-graduate w-5 text-blue-600"></i>
+            <span>Manage Students</span>
+          </a>
+          <a href="{{ url_for('admin.alumni') }}" class="nav-link {% if request.endpoint == 'admin.alumni' %}active-admin{% endif %}">
+            <i class="fa-solid fa-user-tie w-5 text-teal-600"></i>
+            <span>Manage Alumni</span>
+          </a>
+          <a href="{{ url_for('admin.jobs') }}" class="nav-link {% if request.endpoint == 'admin.jobs' %}active-admin{% endif %}">
+            <i class="fa-solid fa-briefcase w-5 text-purple-600"></i>
+            <span>Manage Jobs</span>
+          </a>
+          <a href="{{ url_for('admin.internships') }}" class="nav-link {% if request.endpoint == 'admin.internships' %}active-admin{% endif %}">
+            <i class="fa-solid fa-laptop-code w-5 text-purple-600"></i>
+            <span>Manage Internships</span>
+          </a>
+          <a href="{{ url_for('admin.events') }}" class="nav-link {% if request.endpoint == 'admin.events' %}active-admin{% endif %}">
+            <i class="fa-solid fa-calendar-days w-5 text-purple-600"></i>
+            <span>Manage Events</span>
+          </a>
+          <a href="{{ url_for('admin.announcements') }}" class="nav-link {% if request.endpoint == 'admin.announcements' %}active-admin{% endif %}">
+            <i class="fa-solid fa-bullhorn w-5 text-purple-600"></i>
+            <span>Announcements</span>
+          </a>
+          <a href="{{ url_for('admin.analytics') }}" class="nav-link {% if request.endpoint == 'admin.analytics' %}active-admin{% endif %}">
+            <i class="fa-solid fa-chart-line w-5 text-amber-500"></i>
+            <span>Analytics Dashboard</span>
+          </a>
+        {% endif %}
+      </nav>
+
+      <!-- Logout Button Footer -->
+      <div class="p-4 border-t border-slate-100">
+        <a href="{{ url_for('auth.logout') }}" class="flex items-center space-x-2 px-4 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Sign Out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <main class="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
+      <!-- Top Navbar Navigation Header -->
+      <header class="flex items-center justify-between pb-4 border-b border-[#E5EAF1]">
+        <div class="flex items-center space-x-3">
+          <button onclick="toggleMobileSidebar()" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100">
+            <i class="fa-solid fa-bars text-base"></i>
+          </button>
+
+          <!-- Breadcrumb Navigation -->
+          <div class="text-xs font-semibold text-slate-500 flex items-center space-x-2">
+            <span>AlumniConnect</span>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+            <span class="text-slate-900 font-extrabold capitalize">{% block header_title %}Portal Center{% endblock %}</span>
+          </div>
+        </div>
+
+        <!-- Right Side Header Icons & User Dropdown -->
+        <div class="flex items-center space-x-4">
+          <!-- Notification Bell with Unread Count Badge -->
+          <a href="{% if current_user.role == 'student' %}{{ url_for('student.notifications') }}{% else %}#{% endif %}" class="relative p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+            <i class="fa-regular fa-bell text-sm"></i>
+            {% if unread_notif_count > 0 %}
+            <span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-white"></span>
+            {% endif %}
+          </a>
+
+          <!-- Profile Badge -->
+          <div class="flex items-center space-x-3 border-l border-slate-200 pl-4">
+            <div class="w-9 h-9 rounded-xl bg-slate-900 text-white font-black flex items-center justify-center text-sm shadow-xs">
+              {{ current_user.name[0]|upper }}
+            </div>
+            <div class="hidden sm:block">
+              <span class="font-extrabold text-slate-900 text-xs block leading-tight">{{ current_user.name }}</span>
+              <span class="text-[10px] font-bold text-slate-500 capitalize">{{ current_user.role }}</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Flash Notification Alerts Container -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="space-y-2">
+            {% for category, message in messages %}
+              <div class="flash-alert p-4 rounded-xl border flex items-center justify-between text-xs font-semibold shadow-xs
+                {% if category == 'success' %} bg-emerald-50 text-emerald-800 border-emerald-200
+                {% elif category == 'danger' %} bg-rose-50 text-rose-800 border-rose-200
+                {% elif category == 'warning' %} bg-amber-50 text-amber-800 border-amber-200
+                {% else %} bg-blue-50 text-blue-800 border-blue-200 {% endif %}">
+                <div class="flex items-center space-x-2">
+                  <i class="fa-solid {% if category == 'success' %}fa-circle-check text-emerald-600{% elif category == 'danger' %}fa-circle-xmark text-rose-600{% else %}fa-circle-info text-blue-600{% endif %} text-base"></i>
+                  <span>{{ message }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Child View Content -->
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  {% else %}
+  <!-- ==========================================
+       PUBLIC UNAUTHENTICATED LAYOUT
+       ========================================== -->
+  <div class="flex flex-col min-h-screen">
+    {% block public_content %}{% endblock %}
+  </div>
+  {% endif %}
+
+  <!-- Core JavaScript -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

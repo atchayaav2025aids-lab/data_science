@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Landing - {{ app_name }}{% endblock %}
+
+{% block public_content %}
+<script>window.location.href = "{{ url_for('auth.index') }}";</script>
+{% endblock %}

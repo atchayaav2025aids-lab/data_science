@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Events - {{ app_name }}{% endblock %}
+{% block header_title %}Alumni Events Management{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-purple-950 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-purple-500/30 text-purple-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-purple-500/30">
+                <i class="fa-solid fa-calendar-plus"></i>
+                <span>Events Operations</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Create & Manage College Events</h2>
+            <p class="text-xs sm:text-sm text-purple-200 font-medium max-w-xl">Schedule guest lectures, webinars, and alumni meets with broadcast notifications.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-calendar-days"></i>
+        </div>
+    </div>
+
+    <!-- Create Event Form Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b pb-4 border-slate-100 flex items-center justify-between">
+            <h3 class="text-lg font-extrabold text-slate-900 flex items-center space-x-2">
+                <i class="fa-solid fa-calendar-plus text-purple-600"></i>
+                <span>Create & Organize New Event</span>
+            </h3>
+        </div>
+
+        <form action="{{ url_for('admin.events') }}" method="POST" class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Event Title</label>
+                    <input type="text" name="title" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all" placeholder="e.g. Annual Alumni Meet 2025">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Event Type</label>
+                    <select name="event_type" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium text-slate-800 focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                        <option value="Alumni Meet">Alumni Meet</option>
+                        <option value="Webinar">Webinar</option>
+                        <option value="Career Guidance">Career Guidance</option>
+                        <option value="Technical Talk">Technical Talk</option>
+                        <option value="Networking Event">Networking Event</option>
+                        <option value="Workshop">Workshop</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Event Date</label>
+                    <input type="date" name="event_date" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Event Time</label>
+                    <input type="text" name="event_time" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all" placeholder="e.g. 10:00 AM IST">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Venue / Online Link</label>
+                    <input type="text" name="venue" required class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all" placeholder="e.g. Main Auditorium / Zoom Link">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Event Description & Agenda</label>
+                <textarea name="description" rows="3" required class="w-full px-4 py-3 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all" placeholder="Provide event schedule, keynote speakers, topics covered..."></textarea>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-xs text-slate-500 font-medium">Automatically broadcasts notification to all users.</span>
+                <button type="submit" class="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>Broadcast & Publish Event</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Events List Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 space-y-4 overflow-x-auto">
+        <h3 class="text-lg font-extrabold text-slate-900 border-b pb-4 border-slate-100">All Scheduled College Events</h3>
+
+        <table class="w-full text-left border-collapse text-xs">
+            <thead>
+                <tr class="bg-slate-50 text-slate-500 uppercase font-extrabold text-[10px] border-b border-slate-100">
+                    <th class="p-3">Title & Type</th>
+                    <th class="p-3">Date & Time</th>
+                    <th class="p-3">Venue</th>
+                    <th class="p-3">Registrations</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+                {% for ev in events %}
+                <tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="p-3">
+                        <span class="font-extrabold text-slate-900 block leading-tight">{{ ev.title }}</span>
+                        <span class="text-purple-600 text-[10px] font-extrabold uppercase">{{ ev.event_type }}</span>
+                    </td>
+                    <td class="p-3 font-bold text-slate-700">{{ ev.event_date }} at {{ ev.event_time }}</td>
+                    <td class="p-3 text-slate-600">{{ ev.venue }}</td>
+                    <td class="p-3 font-extrabold text-blue-600"><i class="fa-solid fa-users mr-1"></i> {{ ev.registrations|length }} Registered</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="p-8 text-center text-slate-400 font-medium">No events found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - {{ app_name }}{% endblock %}
+{% block header_title %}System Settings & Configurations{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6">
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="border-b pb-4 border-slate-100 flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">System Settings & Platform Health</h2>
+                <p class="text-xs text-slate-500 font-medium">Core engine statuses, ML model configuration, and database connection state.</p>
+            </div>
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full border border-emerald-200">System Nominal</span>
+        </div>
+
+        <div class="space-y-4">
+            <div class="p-5 bg-slate-50/70 border border-slate-200/80 rounded-2xl flex items-center justify-between hover-lift transition-all">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-slate-900 text-sm block">Centralized Alumni Platform</span>
+                        <span class="text-xs text-slate-500 font-medium">Flask SaaS Architecture with SQLite Database Engine</span>
+                    </div>
+                </div>
+                <span class="px-3.5 py-1.5 bg-blue-600 text-white font-extrabold text-xs rounded-xl shadow">Active</span>
+            </div>
+
+            <div class="p-5 bg-slate-50/70 border border-slate-200/80 rounded-2xl flex items-center justify-between hover-lift transition-all">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-slate-900 text-sm block">AI Recommendation Engine</span>
+                        <span class="text-xs text-slate-500 font-medium">NLTK Tokenizer + TF-IDF Vectorizer + Cosine Similarity Pipeline</span>
+                    </div>
+                </div>
+                <span class="px-3.5 py-1.5 bg-emerald-600 text-white font-extrabold text-xs rounded-xl shadow">Loaded</span>
+            </div>
+
+            <div class="p-5 bg-slate-50/70 border border-slate-200/80 rounded-2xl flex items-center justify-between hover-lift transition-all">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-slate-900 text-sm block">Plotly Interactive Analytics Engine</span>
+                        <span class="text-xs text-slate-500 font-medium">10 Dynamic Plotly Charts generated using Pandas & NumPy</span>
+                    </div>
+                </div>
+                <span class="px-3.5 py-1.5 bg-purple-600 text-white font-extrabold text-xs rounded-xl shadow">Enabled</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

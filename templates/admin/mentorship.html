@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Mentorship Requests - {{ app_name }}{% endblock %}
+{% block header_title %}Mentorship Monitoring Panel{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-purple-950 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-purple-500/30 text-purple-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-purple-500/30">
+                <i class="fa-solid fa-handshake"></i>
+                <span>Central Mentorship Audit</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Institutional Mentorship Ledger</h2>
+            <p class="text-xs sm:text-sm text-purple-200 font-medium max-w-xl">Monitor student-alumni guidance requests, acceptance rates, and session completions.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-comments"></i>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 overflow-x-auto space-y-4">
+        <div class="flex items-center justify-between border-b pb-4 border-slate-100">
+            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Mentorship Connection Log</h3>
+            <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-extrabold rounded-full border border-purple-200">{{ requests|length }} Requests</span>
+        </div>
+
+        <table class="w-full text-left border-collapse text-xs">
+            <thead>
+                <tr class="bg-slate-50 text-slate-500 uppercase font-extrabold text-[10px] border-b border-slate-100">
+                    <th class="p-3">Student</th>
+                    <th class="p-3">Alumni Mentor</th>
+                    <th class="p-3">Message Note</th>
+                    <th class="p-3">Status</th>
+                    <th class="p-3">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+                {% for req in requests %}
+                <tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="p-3 font-bold text-slate-900">{{ req.student.name if req.student else 'Student' }}</td>
+                    <td class="p-3 font-bold text-blue-600">{{ req.alumni.name if req.alumni else 'Alumni' }}</td>
+                    <td class="p-3 text-slate-600 max-w-xs truncate italic">"{{ req.message }}"</td>
+                    <td class="p-3">
+                        <span class="px-3 py-0.5 rounded-full text-[10px] font-extrabold uppercase border shadow-sm
+                            {% if req.status == 'Accepted' %} bg-emerald-100 text-emerald-800 border-emerald-300
+                            {% elif req.status == 'Rejected' %} bg-rose-100 text-rose-800 border-rose-300
+                            {% elif req.status == 'Completed' %} bg-blue-100 text-blue-800 border-blue-300
+                            {% else %} bg-amber-100 text-amber-800 border-amber-300 {% endif %}">
+                            {{ req.status }}
+                        </span>
+                    </td>
+                    <td class="p-3 text-slate-400 font-semibold">{{ req.created_at.strftime('%b %d, %Y') }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="p-8 text-center text-slate-400 font-medium">No mentorship requests available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}About - {{ app_name }}{% endblock %}
+
+{% block public_content %}
+<div class="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8 space-y-12">
+    <!-- Hero Title -->
+    <div class="text-center space-y-3">
+        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-extrabold rounded-full border border-blue-200 uppercase tracking-wider">SIH25017 Enterprise Edition</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">About {{ app_name }}</h1>
+        <p class="text-base text-slate-600 max-w-2xl mx-auto font-medium">Digital Platform for Centralized Alumni Data Management and Engagement</p>
+    </div>
+
+    <!-- Vision Card -->
+    <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
+        <h2 class="text-2xl font-extrabold text-slate-900 border-b pb-4 border-slate-100 tracking-tight">Problem Statement & Vision</h2>
+        <p class="text-slate-600 leading-relaxed font-medium">
+            College alumni records are often fragmented across spreadsheets, social networks, and legacy databases. This causes major challenges in identifying suitable mentors for current students, manual event organization, poor communication channels, and difficulty tracking alumni career achievements.
+        </p>
+        <p class="text-slate-600 leading-relaxed font-medium">
+            <strong>AlumniConnect</strong> addresses these challenges by offering a single, centralized web ecosystem featuring intelligent AI-powered mentorship matching, job/internship recommendations, automated event management, and real-time engagement analytics.
+        </p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm text-center space-y-3 hover-lift transition-all">
+            <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mx-auto font-bold shadow-sm">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h3 class="font-extrabold text-slate-900 text-lg">For Students</h3>
+            <p class="text-xs text-slate-500 font-medium leading-relaxed">Discover mentors, get matched via AI vector similarity, apply for internships, and join college events.</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm text-center space-y-3 hover-lift transition-all">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mx-auto font-bold shadow-sm">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <h3 class="font-extrabold text-slate-900 text-lg">For Alumni</h3>
+            <p class="text-xs text-slate-500 font-medium leading-relaxed">Share professional expertise, guide juniors, post job/internship openings, and showcase achievements.</p>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-sm text-center space-y-3 hover-lift transition-all">
+            <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl mx-auto font-bold shadow-sm">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3 class="font-extrabold text-slate-900 text-lg">For Administration</h3>
+            <p class="text-xs text-slate-500 font-medium leading-relaxed">Monitor engagement through 10 Plotly charts, manage alumni verifications, publish announcements, and track events.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

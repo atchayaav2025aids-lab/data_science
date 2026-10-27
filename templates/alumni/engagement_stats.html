@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Engagement Statistics - {{ app_name }}{% endblock %}
+{% block header_title %}Alumni Engagement Breakdown{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-emerald-500/30 text-emerald-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-emerald-500/30">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Institutional Impact</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Your Contributions & Engagement</h2>
+            <p class="text-xs sm:text-sm text-emerald-100 font-medium max-w-xl">Summary metrics of mentorship sessions, job referrals, and student impact across your alma mater.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-chart-line"></i>
+        </div>
+    </div>
+
+    <!-- Engagement Stats Grid Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="border-b pb-4 border-slate-100 flex items-center justify-between">
+            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Impact Scorecards</h3>
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full border border-emerald-200"><i class="fa-solid fa-medal text-emerald-600 mr-1"></i> Top Contributor</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+            <div class="p-6 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-2 hover-lift transition-all">
+                <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold shadow-sm">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <span class="text-3xl font-black text-slate-900 block">100%</span>
+                <span class="text-xs text-slate-500 font-extrabold uppercase tracking-wider">Mentorship Response Rate</span>
+            </div>
+            
+            <div class="p-6 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-2 hover-lift transition-all">
+                <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold shadow-sm">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <span class="text-3xl font-black text-slate-900 block">4.9 / 5.0</span>
+                <span class="text-xs text-slate-500 font-extrabold uppercase tracking-wider">Mentee Satisfaction</span>
+            </div>
+
+            <div class="p-6 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-2 hover-lift transition-all">
+                <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold shadow-sm">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <span class="text-3xl font-black text-slate-900 block">Gold</span>
+                <span class="text-xs text-slate-500 font-extrabold uppercase tracking-wider">Contributor Tier</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

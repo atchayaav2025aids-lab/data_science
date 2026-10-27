@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Announcements - {{ app_name }}{% endblock %}
+{% block header_title %}College Announcements & Bulletins{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-blue-500/20 text-blue-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-blue-500/30">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>Institutional Bulletins</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Official College Announcements</h2>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-xl font-medium">Important circulars, placement notifications, and campus news broadcasted by management.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-scroll"></i>
+        </div>
+    </div>
+
+    <!-- Announcements Feed Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="border-b pb-4 border-slate-100 flex items-center justify-between">
+            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Broadcast Feed</h3>
+            <span class="text-xs text-slate-400 font-bold"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Chronological Order</span>
+        </div>
+
+        <div class="space-y-4">
+            {% for ann in announcements %}
+            <div class="p-6 rounded-2xl border border-slate-200/80 bg-slate-50/50 space-y-3 hover-lift transition-all">
+                <div class="flex items-center justify-between border-b pb-3 border-slate-200/80">
+                    <span class="text-xs font-extrabold text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100"><i class="fa-solid fa-bullhorn mr-1.5"></i> Notice</span>
+                    <span class="text-xs text-slate-400 font-semibold"><i class="fa-regular fa-calendar mr-1"></i> {{ ann.created_at.strftime('%B %d, %Y') }}</span>
+                </div>
+                <h4 class="text-lg font-extrabold text-slate-900 leading-snug">{{ ann.title }}</h4>
+                <p class="text-sm text-slate-700 leading-relaxed font-medium whitespace-pre-line bg-white p-4 rounded-xl border border-slate-100">{{ ann.content }}</p>
+            </div>
+            {% else %}
+            <div class="py-14 text-center text-slate-400 space-y-3 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                <i class="fa-solid fa-bullhorn text-4xl text-slate-300"></i>
+                <div class="space-y-1">
+                    <p class="text-sm font-bold text-slate-700">No Announcements Published Yet</p>
+                    <p class="text-xs text-slate-500 max-w-sm mx-auto">Official campus announcements and bulletins will appear here.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

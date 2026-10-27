@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Jobs - {{ app_name }}{% endblock %}
+{% block header_title %}Job Postings Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-purple-950 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-purple-500/30 text-purple-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-purple-500/30">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>Job Moderation</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Full-time Job Postings Control</h2>
+            <p class="text-xs sm:text-sm text-purple-200 font-medium max-w-xl">Audit, monitor, and remove job opportunities posted across the platform.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-briefcase"></i>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+            <thead>
+                <tr class="bg-slate-50 text-slate-500 uppercase font-extrabold text-[10px] border-b border-slate-100">
+                    <th class="p-3">Job Title & Company</th>
+                    <th class="p-3">Location</th>
+                    <th class="p-3">Type</th>
+                    <th class="p-3">Posted By</th>
+                    <th class="p-3">Deadline</th>
+                    <th class="p-3 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+                {% for job in jobs %}
+                <tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="p-3">
+                        <span class="font-extrabold text-slate-900 block leading-tight">{{ job.title }}</span>
+                        <span class="text-blue-600 font-bold text-[11px]">{{ job.company }}</span>
+                    </td>
+                    <td class="p-3 text-slate-600">{{ job.location or 'Flexible' }}</td>
+                    <td class="p-3 font-bold text-slate-700">{{ job.job_type }}</td>
+                    <td class="p-3 text-slate-700 font-medium">{{ job.poster.name if job.poster else 'Admin' }}</td>
+                    <td class="p-3 text-rose-600 font-bold">{{ job.deadline or 'Open' }}</td>
+                    <td class="p-3 text-right">
+                        <form action="{{ url_for('admin.delete_job', job_id=job.id) }}" method="POST" onsubmit="return confirm('Delete this job posting?');" class="inline">
+                            <button type="submit" class="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-extrabold text-xs rounded-lg border border-rose-200 transition-all">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">No job postings available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

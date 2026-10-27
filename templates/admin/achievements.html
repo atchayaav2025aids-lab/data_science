@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Alumni Achievements - {{ app_name }}{% endblock %}
+{% block header_title %}Alumni Achievements Central Ledger{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-amber-900 via-amber-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-amber-500/30 text-amber-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-amber-500/30">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Institutional Excellence</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Institutional Alumni Achievements</h2>
+            <p class="text-xs sm:text-sm text-amber-100 font-medium max-w-xl">Audit awards, research citations, and career milestones achieved by institution alumni.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-award"></i>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 overflow-x-auto space-y-4">
+        <div class="flex items-center justify-between border-b pb-4 border-slate-100">
+            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Achievements Ledger</h3>
+            <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-extrabold rounded-full border border-amber-200">{{ achievements|length }} Total</span>
+        </div>
+
+        <table class="w-full text-left border-collapse text-xs">
+            <thead>
+                <tr class="bg-slate-50 text-slate-500 uppercase font-extrabold text-[10px] border-b border-slate-100">
+                    <th class="p-3">Title & Year</th>
+                    <th class="p-3">Organization</th>
+                    <th class="p-3">Description</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+                {% for ach in achievements %}
+                <tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="p-3">
+                        <span class="font-extrabold text-slate-900 block leading-tight">{{ ach.title }}</span>
+                        <span class="text-amber-600 font-bold text-[10px]"><i class="fa-solid fa-calendar mr-1"></i>{{ ach.year }}</span>
+                    </td>
+                    <td class="p-3 font-bold text-slate-700">{{ ach.organization or '-' }}</td>
+                    <td class="p-3 text-slate-600 leading-relaxed max-w-md">{{ ach.description }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3" class="p-8 text-center text-slate-400 font-medium">No alumni achievements recorded.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

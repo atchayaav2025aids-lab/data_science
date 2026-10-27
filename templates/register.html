@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Account - {{ app_name }}{% endblock %}
+
+{% block public_content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[#F7F9FC]">
+  <div class="max-w-xl w-full card-light p-8 space-y-6 bg-white shadow-2xl">
+    <div class="text-center space-y-1">
+      <div class="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center mx-auto text-xl font-bold shadow-lg shadow-blue-500/30">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+      <h2 class="text-2xl font-extrabold text-slate-900">Create AlumniConnect Account</h2>
+      <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Join Centralized Alumni & Student Network</p>
+    </div>
+
+    <!-- Role Selection Buttons -->
+    <div class="bg-slate-100 p-1 rounded-xl flex space-x-1">
+      <button type="button" data-role="student" onclick="selectRole('student')" class="role-tab-btn flex-1 py-2 text-xs font-bold rounded-lg text-center cursor-pointer bg-white shadow-xs text-blue-600">Student Account</button>
+      <button type="button" data-role="alumni" onclick="selectRole('alumni')" class="role-tab-btn flex-1 py-2 text-xs font-bold rounded-lg text-center cursor-pointer text-slate-500">Alumni Account</button>
+    </div>
+
+    <form action="{{ url_for('auth.register') }}" method="POST" class="space-y-4">
+      <input type="hidden" id="role" name="role" value="student">
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Full Name</label>
+          <input id="name" name="name" type="text" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500/20 focus:outline-none" placeholder="Arun Kumar">
+        </div>
+        <div>
+          <label for="email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email Address</label>
+          <input id="email" name="email" type="email" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500/20 focus:outline-none" placeholder="user@college.edu">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="password" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Password</label>
+          <input id="password" name="password" type="password" required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500/20 focus:outline-none" placeholder="••••••••">
+        </div>
+        <div>
+          <label for="department" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Department</label>
+          <select id="department" name="department" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
+            <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
+            <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+            <option value="Electronics & Communication Engineering">Electronics & Communication Engineering</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Student Specific Fields -->
+      <div id="student-fields" class="space-y-4 pt-3 border-t border-slate-100">
+        <h4 class="text-xs font-extrabold text-blue-600 uppercase tracking-wider">Student Academic Details</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label for="register_number" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Register Number</label>
+            <input id="register_number" name="register_number" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs" placeholder="211421104001">
+          </div>
+          <div>
+            <label for="year" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Current Year</label>
+            <select id="year" name="year" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold">
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year" selected>3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+          <div>
+            <label for="graduation_year" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Graduation Year</label>
+            <input id="graduation_year" name="graduation_year" type="number" value="2026" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="skills" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Skills (Comma-separated)</label>
+            <input id="skills" name="skills" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs" placeholder="Python, SQL, Machine Learning">
+          </div>
+          <div>
+            <label for="career_goal" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Career Goal</label>
+            <input id="career_goal" name="career_goal" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs" placeholder="AI Engineer / Data Scientist">
+          </div>
+        </div>
+      </div>
+
+      <!-- Alumni Specific Fields -->
+      <div id="alumni-fields" class="space-y-4 pt-3 border-t border-slate-100 hidden">
+        <h4 class="text-xs font-extrabold text-teal-600 uppercase tracking-wider">Alumni Professional Details</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label for="alumni_grad_year" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Graduation Year</label>
+            <input id="alumni_grad_year" name="graduation_year" type="number" value="2022" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-semibold">
+          </div>
+          <div>
+            <label for="current_company" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Current Company</label>
+            <input id="current_company" name="current_company" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs" placeholder="Google / Microsoft / TCS">
+          </div>
+          <div>
+            <label for="job_title" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Job Title</label>
+            <input id="job_title" name="job_title" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs" placeholder="Senior Software Engineer">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="industry" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Industry Sector</label>
+            <input id="industry" name="industry" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs" placeholder="Information Technology">
+          </div>
+          <div>
+            <label for="location" class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Location</label>
+            <input id="location" name="location" type="text" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs" placeholder="Bengaluru, India">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/25 transition-all">
+        Complete Registration
+      </button>
+    </form>
+
+    <div class="text-center pt-2 border-t border-slate-100 text-xs text-slate-500 font-semibold">
+      <a href="{{ url_for('auth.login') }}" class="text-blue-600 hover:text-blue-700">Already have an account? Sign In</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

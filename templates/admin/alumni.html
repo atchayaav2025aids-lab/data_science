@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Alumni - {{ app_name }}{% endblock %}
+{% block header_title %}Alumni User & Verification Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Banner -->
+    <div class="bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div class="space-y-2 z-10">
+            <div class="inline-flex items-center space-x-1.5 bg-purple-500/30 text-purple-300 text-[11px] font-extrabold px-3 py-1 rounded-full border border-purple-500/30">
+                <i class="fa-solid fa-shield-check"></i>
+                <span>Alumni Verification Console</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Alumni Identity & Verification</h2>
+            <p class="text-xs sm:text-sm text-purple-200 font-medium max-w-xl">Verify alumni credentials, audit profiles, and grant verified status badges for platform trustworthiness.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-user-check"></i>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <form action="{{ url_for('admin.alumni') }}" method="GET" class="flex flex-1 max-w-lg gap-2">
+            <div class="relative flex-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Search alumni by name, email, company, or department..." class="w-full pl-9 pr-3.5 py-2 border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all">
+            </div>
+            <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs rounded-xl shadow transition-all">Search</button>
+        </form>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+            <thead>
+                <tr class="bg-slate-50 text-slate-500 uppercase font-extrabold text-[10px] border-b border-slate-100">
+                    <th class="p-3">Name & Email</th>
+                    <th class="p-3">Company & Role</th>
+                    <th class="p-3">Department</th>
+                    <th class="p-3">Grad Year</th>
+                    <th class="p-3">Verification</th>
+                    <th class="p-3 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+                {% for user in alumni %}
+                {% set alum = user.alumni_profile %}
+                <tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="p-3">
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0">
+                                {{ user.name[0]|upper }}
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900 block leading-tight">{{ user.name }}</span>
+                                <span class="text-slate-500 text-[11px]">{{ user.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-3">
+                        <span class="font-bold text-blue-600 block">{{ alum.job_title if alum else 'Alumni' }}</span>
+                        <span class="text-slate-600 font-semibold text-[11px]">{{ alum.current_company if alum else '-' }}</span>
+                    </td>
+                    <td class="p-3 text-slate-700 font-medium">{{ alum.department if alum else '-' }}</td>
+                    <td class="p-3 font-bold text-slate-700">{{ alum.graduation_year if alum else '-' }}</td>
+                    <td class="p-3">
+                        {% if alum and alum.profile_verified %}
+                        <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-full border border-emerald-300">
+                            <i class="fa-solid fa-circle-check mr-1"></i> Verified
+                        </span>
+                        {% else %}
+                        <span class="px-2.5 py-1 bg-amber-100 text-amber-800 font-extrabold text-[10px] rounded-full border border-amber-300">
+                            <i class="fa-solid fa-clock mr-1"></i> Unverified
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="p-3 text-right space-x-2">
+                        <form action="{{ url_for('admin.verify_alumni', user_id=user.id) }}" method="POST" class="inline">
+                            <button type="submit" class="px-3 py-1 text-[11px] font-extrabold rounded-lg transition-all
+                                {% if alum and alum.profile_verified %} bg-slate-200 text-slate-700 hover:bg-slate-300
+                                {% else %} bg-emerald-600 text-white hover:bg-emerald-500 shadow {% endif %}">
+                                {% if alum and alum.profile_verified %}Unverify{% else %}Verify Profile{% endif %}
+                            </button>
+                        </form>
+                        <form action="{{ url_for('admin.delete_user', user_id=user.id) }}" method="POST" onsubmit="return confirm('Delete this alumni record?');" class="inline">
+                            <button type="submit" class="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-extrabold text-xs rounded-lg border border-rose-200 transition-all">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">No alumni records found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

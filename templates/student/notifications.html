@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - {{ app_name }}{% endblock %}
+{% block header_title %}System Notifications{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6">
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="flex items-center justify-between border-b pb-4 border-slate-100">
+            <div>
+                <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">Your Activity Notifications</h2>
+                <p class="text-xs text-slate-500 font-medium">Updates regarding mentorship requests, event registrations, and announcements.</p>
+            </div>
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full border border-blue-200">{{ notifications|length }} Total</span>
+        </div>
+
+        <div class="space-y-3">
+            {% for n in notifications %}
+            <div class="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 flex items-start space-x-4 hover-lift transition-all">
+                <div class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 shadow-sm">
+                    {% if n.category == 'event' %}
+                    <i class="fa-solid fa-calendar-check text-purple-600"></i>
+                    {% elif n.category == 'mentorship' %}
+                    <i class="fa-solid fa-user-graduate text-teal-600"></i>
+                    {% else %}
+                    <i class="fa-solid fa-bell text-blue-600"></i>
+                    {% endif %}
+                </div>
+                <div class="flex-1 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-extrabold text-slate-900 text-sm leading-tight">{{ n.title }}</h4>
+                        <span class="text-[11px] text-slate-400 font-semibold shrink-0 ml-2"><i class="fa-regular fa-clock mr-1"></i>{{ n.created_at.strftime('%b %d, %H:%M') }}</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed font-medium">{{ n.message }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="py-14 text-center text-slate-400 space-y-3 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                <i class="fa-solid fa-bell-slash text-4xl text-slate-300"></i>
+                <div class="space-y-1">
+                    <p class="text-sm font-bold text-slate-700">No Notifications Received</p>
+                    <p class="text-xs text-slate-500 max-w-sm mx-auto">System alerts and activity updates will be logged here.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

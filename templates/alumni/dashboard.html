@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Alumni Dashboard - {{ app_name }}{% endblock %}
+{% block header_title %}Alumni Engagement Hub{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Welcome Header Banner -->
+    <div class="bg-gradient-to-r from-emerald-700 via-teal-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                    <span class="bg-white/20 backdrop-blur-md text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Alumni Portal</span>
+                    <span class="bg-emerald-500/30 text-emerald-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-400/30"><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Verified Alumni</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Welcome back, {{ current_user.name }}!</h2>
+                <p class="text-emerald-100 text-xs sm:text-sm max-w-2xl font-medium">
+                    {{ profile.job_title }} at <strong class="text-white font-bold">{{ profile.current_company }}</strong> | Department of {{ profile.department }} (Batch {{ profile.graduation_year }})
+                </p>
+            </div>
+
+            <div class="flex items-center space-x-3 shrink-0">
+                <a href="{{ url_for('alumni.post_job') }}" class="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Post Job</span>
+                </a>
+                <a href="{{ url_for('alumni.post_internship') }}" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs rounded-xl transition-all flex items-center space-x-2 backdrop-blur-md">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Post Internship</span>
+                </a>
+            </div>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-white/10 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-user-tie"></i>
+        </div>
+    </div>
+
+    <!-- Stats KPI Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-2">
+            <span class="text-xs font-extrabold text-amber-600 uppercase tracking-wider block">Pending Requests</span>
+            <div class="flex items-center justify-between">
+                <span class="text-3xl font-black text-slate-900">{{ pending_count }}</span>
+                <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-2">
+            <span class="text-xs font-extrabold text-emerald-600 uppercase tracking-wider block">Active Mentees</span>
+            <div class="flex items-center justify-between">
+                <span class="text-3xl font-black text-slate-900">{{ accepted_count }}</span>
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-2">
+            <span class="text-xs font-extrabold text-blue-600 uppercase tracking-wider block">Jobs Posted</span>
+            <div class="flex items-center justify-between">
+                <span class="text-3xl font-black text-slate-900">{{ my_jobs }}</span>
+                <div class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover-lift space-y-2">
+            <span class="text-xs font-extrabold text-purple-600 uppercase tracking-wider block">Internships Posted</span>
+            <div class="flex items-center justify-between">
+                <span class="text-3xl font-black text-slate-900">{{ my_internships }}</span>
+                <div class="w-11 h-11 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incoming Mentorship Requests Table -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="flex items-center justify-between border-b pb-4 border-slate-100">
+            <h3 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <span>Incoming Student Mentorship Requests</span>
+            </h3>
+            <a href="{{ url_for('alumni.mentorship_requests') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center space-x-1">
+                <span>View All</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
+
+        <div class="space-y-4">
+            {% for req in received_requests %}
+            <div class="p-5 rounded-2xl border border-slate-200/80 bg-slate-50/50 space-y-3 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:bg-white hover:shadow-md">
+                <div class="space-y-2 flex-1">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow">
+                            {{ req.student.name[0]|upper }}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">{{ req.student.name }}</h4>
+                            <p class="text-xs text-slate-500 font-medium">
+                                {{ req.student.student_profile.department }} | {{ req.student.student_profile.year }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-3.5 bg-white rounded-xl border border-slate-200/70 text-xs text-slate-700 font-medium italic">
+                        "{{ req.message }}"
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3 justify-end">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider
+                        {% if req.status == 'Accepted' %} bg-emerald-100 text-emerald-800 border border-emerald-300
+                        {% elif req.status == 'Rejected' %} bg-rose-100 text-rose-800 border border-rose-300
+                        {% else %} bg-amber-100 text-amber-800 border border-amber-300 {% endif %}">
+                        {{ req.status }}
+                    </span>
+
+                    {% if req.status == 'Pending' %}
+                    <form action="{{ url_for('mentorship.respond_request', request_id=req.id) }}" method="POST" class="flex space-x-2">
+                        <button type="submit" name="action" value="accept" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition-all">
+                            Accept
+                        </button>
+                        <button type="submit" name="action" value="reject" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow transition-all">
+                            Reject
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <!-- Styled Clean Empty State -->
+            <div class="py-12 text-center space-y-3 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold">
+                    <i class="fa-solid fa-inbox"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-700">No Mentorship Requests Yet</h4>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto">Student requests will appear here when students reach out to you for guidance and career mentorship.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

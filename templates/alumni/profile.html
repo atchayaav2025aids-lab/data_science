@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}My Alumni Profile - {{ app_name }}{% endblock %}
+{% block header_title %}Alumni Profile Management{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header Summary Card -->
+    <div class="bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative overflow-hidden">
+        <div class="flex items-center space-x-5 z-10">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white font-black text-3xl flex items-center justify-center shadow-lg border-2 border-white/20">
+                {{ current_user.name[0]|upper }}
+            </div>
+            <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                    <h2 class="text-2xl font-extrabold tracking-tight">{{ current_user.name }}</h2>
+                    {% if profile.profile_verified %}
+                    <span class="px-2.5 py-0.5 bg-emerald-500/30 text-emerald-200 text-[11px] font-bold rounded-full border border-emerald-400/30 flex items-center">
+                        <i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Verified
+                    </span>
+                    {% endif %}
+                </div>
+                <p class="text-xs sm:text-sm text-emerald-100 font-medium">{{ profile.job_title or 'Professional' }} at <strong class="text-white font-bold">{{ profile.current_company or 'Organization' }}</strong></p>
+                <p class="text-[11px] text-teal-200 font-medium"><i class="fa-solid fa-graduation-cap mr-1"></i> {{ profile.department or 'Engineering' }} • Batch of {{ profile.graduation_year or 2022 }}</p>
+            </div>
+        </div>
+        <div class="z-10 shrink-0">
+            {% if profile.mentorship_available %}
+            <span class="px-4 py-2 bg-emerald-500/30 text-emerald-200 text-xs font-bold rounded-2xl border border-emerald-400/40 flex items-center space-x-2">
+                <i class="fa-solid fa-circle-dot text-emerald-400 animate-pulse"></i>
+                <span>Open for Mentorship</span>
+            </span>
+            {% else %}
+            <span class="px-4 py-2 bg-white/10 text-slate-300 text-xs font-bold rounded-2xl border border-white/10 flex items-center space-x-2">
+                <i class="fa-solid fa-circle-xmark text-slate-400"></i>
+                <span>Mentorship Off</span>
+            </span>
+            {% endif %}
+        </div>
+        <div class="absolute -right-8 -bottom-8 text-white/5 text-9xl font-black pointer-events-none">
+            <i class="fa-solid fa-user-tie"></i>
+        </div>
+    </div>
+
+    <!-- Main Profile Edit Form Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b pb-4 border-slate-100 flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Professional Profile Details</h3>
+                <p class="text-xs text-slate-500 font-medium">Keep your position, industry, and contact details up to date for campus visibility.</p>
+            </div>
+            <span class="text-xs text-slate-400 font-bold"><i class="fa-solid fa-lock text-slate-300 mr-1"></i> Verified Record</span>
+        </div>
+
+        <form action="{{ url_for('alumni.profile') }}" method="POST" class="space-y-6">
+            <!-- Row 1: Basic Info -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Full Name</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                        <input type="text" name="name" value="{{ current_user.name }}" required class="w-full pl-9 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Graduation Year</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-graduation-cap absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                        <input type="number" name="graduation_year" value="{{ profile.graduation_year or 2022 }}" required class="w-full pl-9 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Department, Degree, Experience -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Department</label>
+                    <input type="text" name="department" value="{{ profile.department or '' }}" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Degree</label>
+                    <input type="text" name="degree" value="{{ profile.degree or 'B.Tech' }}" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Years of Experience</label>
+                    <input type="text" name="experience" value="{{ profile.experience or '3 Years' }}" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all">
+                </div>
+            </div>
+
+            <!-- Row 3: Current Company, Job Title, Industry -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Current Company</label>
+                    <input type="text" name="current_company" value="{{ profile.current_company or '' }}" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-bold text-blue-600 focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Job Title / Designation</label>
+                    <input type="text" name="job_title" value="{{ profile.job_title or '' }}" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Industry Sector</label>
+                    <input type="text" name="industry" value="{{ profile.industry or '' }}" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all">
+                </div>
+            </div>
+
+            <!-- Row 4: Location & LinkedIn -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Current Location</label>
+                    <input type="text" name="location" value="{{ profile.location or '' }}" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all" placeholder="e.g. Bangalore, India">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">LinkedIn Profile URL</label>
+                    <div class="relative">
+                        <i class="fa-brands fa-linkedin absolute left-3.5 top-3 text-blue-500 text-xs"></i>
+                        <input type="url" name="linkedin_url" value="{{ profile.linkedin_url or '' }}" class="w-full pl-9 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all" placeholder="https://linkedin.com/in/username">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 5: Skills & Bio -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Skills & Technical Expertise</label>
+                    <textarea name="skills" rows="3" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all" placeholder="e.g. System Architecture, Python, Cloud Engineering, React">{{ profile.skills or '' }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase text-slate-700 tracking-wider mb-1.5">Bio / Mentorship Focus Summary</label>
+                    <textarea name="bio" rows="3" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all" placeholder="Brief background and topics you are happy to guide students on...">{{ profile.bio or '' }}</textarea>
+                </div>
+            </div>
+
+            <!-- Mentorship Availability Switch -->
+            <div class="p-5 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl flex items-center justify-between">
+                <div class="space-y-0.5">
+                    <span class="text-xs font-extrabold text-emerald-900 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-handshake text-emerald-600"></i>
+                        <span>Mentorship Availability Status</span>
+                    </span>
+                    <p class="text-[11px] text-emerald-800 font-medium">When checked, your profile will be listed in student mentor search and AI recommendation engines.</p>
+                </div>
+                <label class="flex items-center space-x-2.5 cursor-pointer shrink-0">
+                    <input type="checkbox" name="mentorship_available" {% if profile.mentorship_available %}checked{% endif %} class="h-5 w-5 text-emerald-600 focus:ring-emerald-500 rounded border-slate-300">
+                    <span class="text-xs font-extrabold text-emerald-900">Available</span>
+                </label>
+            </div>
+
+            <!-- Save Action Button -->
+            <div class="pt-5 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-xs text-slate-500 font-medium">Updates are instantly visible across the student network.</span>
+                <button type="submit" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-xl text-xs shadow-md transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Update Alumni Profile</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
